@@ -32,9 +32,9 @@ O dado entra pelo webhook com status `aprovado`, a legenda é enviada ao Gemini 
 
 ## Evidências
 
-| Resultado da execução | Dados persistidos |
-|---|---|
-| ![resultado](img/resultados.png) | ![banco](img/dadosPersistidos.png) |
+| Resultado da execução | 
+|---|
+| ![resultado](img/resultados.png) |
 
 ![workflow](img/workflow.png)
 
@@ -81,6 +81,8 @@ JSON de entrada
 
 Qualquer campo obrigatório ausente (`nome`, `telefone`, `email`, `especialidade`, `principal_desafio`) interrompe o fluxo e lista todos os erros antes de retornar.
 
+| Dados persistidos |
+| ![banco](img/dadosPersistidos.png) |
 ## Tratamento de erros
 
 - Campos vazios: coleta todos os erros e exibe antes de abortar (sem parar no primeiro).
