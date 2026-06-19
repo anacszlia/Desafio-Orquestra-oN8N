@@ -18,6 +18,8 @@ Acesse `http://localhost:5678`, importe o arquivo `My workflow 2 (1).json` e con
 ## Fluxo do Workflow
 
 Para acionar o Webhook que fica no aguardo de uma solicitação post, rode o comando: ```curl -X POST http://localhost:5678/webhook-test/aprovado```
+
+```
 Webhook (POST /aprovado)
     → Edit Fields       # monta o payload do post (nome, descrição, legenda, status)
     → Message a model   # envia a legenda ao Gemini: "Gere hashtags para Instagram..."
