@@ -1,0 +1,220 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Gere hashtags para Instagram baseadas no texto abaixo:\n\n{{$json.legenda}}\n\nResponda apenas com hashtags separadas por espaço."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        16
+      ],
+      "id": "c3e4ecd6-9f3e-4365-871d-5d9673348d4d",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "CH0GgzdZmedfqE0S",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"nome\": \"Post 1\",\n  \"descricao\": \"texto do post\",\n  \"legenda\": \"conteúdo da legenda\",\n  \"status\": \"aprovado\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        16,
+        -192
+      ],
+      "id": "d2b4eab9-1f8b-49ae-923b-5c55ae8487e5",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "aprovado",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -224,
+        -176
+      ],
+      "id": "c207912e-f637-4729-b170-c1a3536cea85",
+      "name": "Webhook",
+      "webhookId": "4f31dab6-023a-4bbb-8733-f947184a8e01"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "badbd34e-093f-497a-ba19-ee4768b6f4aa",
+              "name": "nome",
+              "value": "={{$node[\"Edit Fields\"].json.nome}}",
+              "type": "string"
+            },
+            {
+              "id": "464e7a0a-e7ef-433d-b7e3-1a82986c43bb",
+              "name": "legenda",
+              "value": "={{$node[\"Edit Fields\"].json.legenda}}",
+              "type": "string"
+            },
+            {
+              "id": "81acdf0b-242c-413d-9c50-57558ff8da26",
+              "name": "hashtags",
+              "value": "={{ $json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        304,
+        160
+      ],
+      "id": "d1a27416-8335-46e4-a184-0ea160e1e130",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "resource": "table",
+        "operation": "create",
+        "tableName": "posts_instagram",
+        "columns": {
+          "column": [
+            {
+              "name": "nome"
+            },
+            {
+              "name": "legenda"
+            },
+            {
+              "name": "hashtags"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        464,
+        -128
+      ],
+      "id": "96487da6-057b-43a8-a327-6ec84227c0b6",
+      "name": "Create a data table"
+    },
+    {
+      "parameters": {
+        "resource": "label",
+        "operation": "get"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        544,
+        80
+      ],
+      "id": "5d033696-4493-44f3-a642-9e235bc9a143",
+      "name": "Get a label info",
+      "webhookId": "ac0c407e-fa78-4238-ac7b-9dadc7f64a67"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Create a data table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a data table": {
+      "main": [
+        [
+          {
+            "node": "Get a label info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "4422950c-36ef-448c-8481-e0060bf8044a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "89d37d42e9e8ccf60a36c53175d32f524de506fd13dd7ce8fba5c08800e5424f"
+  },
+  "nodeGroups": [],
+  "id": "qSb3GFOe1fduMHcZ",
+  "tags": []
+}
